@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/autocomple_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+              android:orientation="vertical"
+    android:paddingBottom="2dp"
+    android:paddingTop="2dp"
+    >
+
+    <TextView android:id="@+id/mainTitle"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="6dp"
+              android:padding="5dp"
+              android:textAppearance="?android:attr/textAppearanceMedium"
+              android:textColor="@color/colorWhiteText"
+        />
+
+    <TextView android:id="@+id/placeTitle"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/mainTitle"
+              android:padding="5dp"
+              android:textAppearance="?android:attr/textAppearanceSmall"
+              android:textColor="@color/colorWhiteText"
+        />
+
+</LinearLayout>

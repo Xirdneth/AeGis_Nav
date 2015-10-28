@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AeGis NAV</string>
     <string name="action_settings">Settings</string>
-    <string name="action_search">Search</string>
+    <string name="action_search">City Weather</string>
     <string name="action_logout">Sign Out</string>
     <string name="action_feedback">Send Feedback</string>
     <string name="drawer_open">Open</string>
@@ -129,7 +129,7 @@
     <!-- End of Pref -->
 
 
-    <string name="greeting">Welcome Back</string>
+    <string name="greeting">Hi: </string>
     <string name="action">Action</string>
 
     <!-- For Camera stuff -->
@@ -172,7 +172,7 @@
 
     <!--Places-->
     <string name="autocomplete_hint">Enter place name or address</string>
-    <string name="selected_place">Last Selected Place:</string>
+    <string name="selected_place">Selected Place Details:</string>
     <string name="show_on_map">Open In Maps</string>
 
     <!-- getString(String, Object...) does not support HTML tags directly, they need to be encoded first.
@@ -188,4 +188,24 @@
 
         ]]>
     </string>
+
+    <!-- Weather part -->
+
+    <string name="change_city">Change city</string>
+
+    <!-- Put your own APP ID here -->
+    <string name="open_weather_maps_app_id">e9b9987ad7fa2d42ee47be19ca082a4e</string>
+
+    <string name="weather_sunny">&#xf00d;</string>
+    <string name="weather_clear_night">&#xf02e;</string>
+
+    <string name="weather_foggy">&#xf014;</string>
+    <string name="weather_cloudy">&#xf013;</string>
+    <string name="weather_rainy">&#xf019;</string>
+    <string name="weather_snowy">&#xf01b;</string>
+    <string name="weather_thunder">&#xf01e;</string>
+    <string name="weather_drizzle">&#xf01c;</string>
+
+    <string name="place_not_found">Sorry, no weather data found.</string>
+
 </resources>

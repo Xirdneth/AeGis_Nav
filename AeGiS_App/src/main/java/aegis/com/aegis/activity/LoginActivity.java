@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,8 +16,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Fade;
-import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,30 +59,23 @@ public class LoginActivity extends AppCompatActivity implements
     /* Keys for persisting instance variables in savedInstanceState */
     private static final String KEY_IS_RESOLVING = "is_resolving";
     private static final String KEY_SHOULD_RESOLVE = "should_resolve";
+    private static Snackbar login_notifications;
     private Bitmap imgtemp;
-
     /* Client for accessing Google APIs */
     private GoogleApiClient mGoogleApiClient;
-
     /* View to display current status (signed-in, signed-out, disconnected, etc) */
     private TextView mStatus;
-
     // [START resolution_variables]
     /* Is there a ConnectionResult resolution in progress? */
     private boolean mIsResolving = false;
-
     /* Should we automatically resolve ConnectionResults when possible? */
     private boolean mShouldResolve;
     private SharedPreferences applicationSettings;
-
     //Buttons
     private Button sign_out, disconnect, proceed;
     private SignInButton sign_in;
-
     //Classes
     private User user;
-
-    private static Snackbar login_notifications;
     private ImageView profile;
     private ViewGroup mRootView;
 
@@ -146,6 +138,14 @@ public class LoginActivity extends AppCompatActivity implements
                 .addScope(new Scope(Scopes.EMAIL))
                 .build();
         // [END create_google_api_client]
+
+        Snackbar.make(findViewById(R.id.main_layout), "Do you want to sign in as a guest?", Snackbar.LENGTH_INDEFINITE).setAction(getString(R.string.ok), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainStarter = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(mainStarter);
+            }
+        }).show();
     }
 
     private void updateUI(boolean isSignedIn){
@@ -273,6 +273,18 @@ public class LoginActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Snackbar.make(findViewById(R.id.main_layout), "Do you want to sign in as a guest?", Snackbar.LENGTH_INDEFINITE).setAction(getString(R.string.ok), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mainStarter = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(mainStarter);
+            }
+        }).show();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
@@ -319,6 +331,8 @@ public class LoginActivity extends AppCompatActivity implements
             }
         }
     }
+
+
 
     // [START on_connected]
     @Override
@@ -419,9 +433,9 @@ public class LoginActivity extends AppCompatActivity implements
     @Override
     public void onClick(View v)
     {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             TransitionManager.beginDelayedTransition(mRootView, new Fade());
-        }
+        }*/
         switch (v.getId()) {
             case R.id.sign_in_button:
                 onSignInClicked();

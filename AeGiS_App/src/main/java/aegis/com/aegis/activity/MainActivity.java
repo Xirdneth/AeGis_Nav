@@ -4,6 +4,7 @@ package aegis.com.aegis.activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,23 +45,21 @@ import aegis.com.aegis.utility.Notifier;
 
 public class MainActivity extends ActionBarActivity implements FragmentDrawer.FragmentDrawerListener, View.OnClickListener, SearchView.OnQueryTextListener, Animation.AnimationListener
 {
-
+    private static final int RC_BARCODE_CAPTURE = 9001;
     private static String TAG = MainActivity.class.getSimpleName();
-
+    private static Animation spin;
     private ImageView profile_pic;
-
     private Toolbar mToolbar;
     private FragmentDrawer drawerFragment;
     private TextView Username;
     private SharedPreferences applicationSettings;
     private FloatingActionButton fab;
-    private static Animation spin;
     private User user;
     private SharedPreferences.Editor _editor;
-    private static final int RC_BARCODE_CAPTURE = 9001;
     private Fragment fragment = null;
     private SearchView searchbar;
     private Intent action = null;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +80,6 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        applicationSettings = PreferenceManager.getDefaultSharedPreferences(this);
 
         applicationSettings = PreferenceManager.getDefaultSharedPreferences(this);
         _editor = applicationSettings.edit();
@@ -90,6 +88,7 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         drawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
         drawerFragment.setDrawerListener(this);
+
 
         InitUserElements();
 
@@ -105,8 +104,6 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
     private void InitUserElements()
     {
         Username = (TextView)findViewById(R.id.nav_greeting);
-        Username.setText(getString(R.string.greeting) + " " + applicationSettings.getString("example_text", "User"));
-
         profile_pic = (ImageView) findViewById(R.id.header_profile);
 
         if (user != null) {
@@ -123,13 +120,12 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
                 profile_pic.setImageResource(R.drawable.ic_profile);
             }
         } else {
-            profile_pic.setImageResource(R.drawable.ic_profile);
+            profile_pic.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_profile));
+            _editor.putString("example_text", "User");
+            _editor.commit();
         }
-
-        Username = (TextView) findViewById(R.id.nav_greeting);
         Username.setText(getString(R.string.greeting) + " " + applicationSettings.getString("example_text", "User"));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -143,7 +139,6 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
         searchbar.setSubmitButtonEnabled(true);
         return true;
     }
-
 
     @Override
     public void onConfigurationChanged(Configuration newConfig)
@@ -167,13 +162,6 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
 
         if(id == R.id.action_search){
             Toast.makeText(getApplicationContext(), "Search action is selected!", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-
-        if(id == R.id.action_logout)
-        {
-            Toast.makeText(getApplicationContext(), "Logs Out", Toast.LENGTH_SHORT).show();
-            finish();
             return true;
         }
 
@@ -204,12 +192,11 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
                 title = getString(R.string.title_places);
                 break;
             case 2:
-
                 startActivity(new Intent(this, NavigationActivity.class));
                 title = getString(R.string.title_navigation);
                 break;
             case 3:
-                fragment =  null;
+                fragment = new ExtrasFragment();
                 title = getString(R.string.title_extras);
                 break;
             default:
@@ -241,7 +228,10 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
         switch (v.getId())
         {
             case R.id.fab_QR:
-                fab.startAnimation(spin);
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+                    fab.startAnimation(spin);
+                else
+                    onAnimationEnd(null);
                 break;
         }
     }
@@ -325,7 +315,6 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
         }
     }
 
-
     @Override
     public boolean onQueryTextSubmit(String query)
     {
@@ -346,13 +335,12 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
 
     @Override
     public void onAnimationStart(Animation animation) {
-
+        // launch barcode activity.
+        intent = new Intent(MainActivity.this, BarcodeCaptureActivity.class);
     }
 
     @Override
     public void onAnimationEnd(Animation animation) {
-        // launch barcode activity.
-        Intent intent = new Intent(this, BarcodeCaptureActivity.class);
         startActivityForResult(intent, RC_BARCODE_CAPTURE);
     }
 

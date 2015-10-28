@@ -1,11 +1,11 @@
 package aegis.com.aegis.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import aegis.com.aegis.R;
+
 /**
  * Created by Maxwell on 10/12/2015.
  */
@@ -35,6 +37,8 @@ public class AutoCompleteAdapter
 
     private static final String TAG = "PlaceAutocompleteAdapter";
     private static final CharacterStyle STYLE_BOLD = new StyleSpan(Typeface.BOLD);
+    private TextView title, details;
+
     /**
      * Current results returned by this adapter.
      */
@@ -54,6 +58,7 @@ public class AutoCompleteAdapter
      * The autocomplete filter used to restrict queries to a specific set of place types.
      */
     private AutocompleteFilter mPlaceFilter;
+    private Context context;
 
     /**
      * Initializes with a resource for text rows and autocomplete query bounds.
@@ -62,7 +67,8 @@ public class AutoCompleteAdapter
      */
     public AutoCompleteAdapter(Context context, GoogleApiClient googleApiClient,
                                     LatLngBounds bounds, AutocompleteFilter filter) {
-        super(context, android.R.layout.simple_expandable_list_item_2, android.R.id.text1);
+        super(context, R.layout.autocompleter, R.id.mainTitle);
+        this.context = context;
         mGoogleApiClient = googleApiClient;
         mBounds = bounds;
         mPlaceFilter = filter;
@@ -92,23 +98,25 @@ public class AutoCompleteAdapter
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View row = super.getView(position, convertView, parent);
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
+        LayoutInflater mInflater = (LayoutInflater) context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //View row = super.getView(position, convertView, parent);
 
+        convertView = mInflater.inflate(R.layout.autocompleter,
+                                        parent, false);
         // Sets the primary and secondary text for a row.
         // Note that getPrimaryText() and getSecondaryText() return a CharSequence that may contain
         // styling based on the given CharacterStyle.
 
         AutocompletePrediction item = getItem(position);
 
-        TextView textView1 = (TextView) row.findViewById(android.R.id.text1);
-        TextView textView2 = (TextView) row.findViewById(android.R.id.text2);
-        textView1.setTextColor(Color.WHITE);
-        textView2.setTextColor(Color.WHITE);
-        textView1.setText(item.getPrimaryText(STYLE_BOLD));
-        textView2.setText(item.getSecondaryText(STYLE_BOLD));
-
-        return row;
+        title = (TextView) convertView.findViewById(R.id.mainTitle);
+        details = (TextView) convertView.findViewById(R.id.placeTitle);
+        title.setText(item.getPrimaryText(STYLE_BOLD));
+        details.setText(item.getSecondaryText(STYLE_BOLD));
+        return convertView;
     }
 
     /**
