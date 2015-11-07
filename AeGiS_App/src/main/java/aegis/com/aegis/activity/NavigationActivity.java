@@ -507,6 +507,10 @@ public class NavigationActivity extends ActionBarActivity implements OnMapReadyC
         });*/
 
 
+        //Context c = this.getApplicationContext();
+        //WifiManager wifi = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+        //wifi.startScan();
+
         ArrayList<String> connections;
         ArrayList<Float> Signal_Strenth;
         ArrayList<String> FullSpot;
