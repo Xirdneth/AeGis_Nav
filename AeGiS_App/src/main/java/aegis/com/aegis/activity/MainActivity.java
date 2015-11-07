@@ -121,7 +121,7 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
             _editor.putString("example_text", "User");
             _editor.commit();
         }
-        Username.setText(getString(R.string.greeting) + " " + applicationSettings.getString("example_text", "User"));
+        Username.setText(applicationSettings.getString("example_text", "User"));
     }
 
     @Override
@@ -255,6 +255,9 @@ public class MainActivity extends ActionBarActivity implements FragmentDrawer.Fr
                                     final double lng = barcode.geoPoint.lng;
                                     action.putExtra(IntentNames.MAP_INTENT_KEY, new CustomLocation("Place", lat, lng));
                                     startActivity(action);
+                                    break;
+                                case Barcode.TEXT:
+                                    Toast.makeText(getApplicationContext(), intentData, Toast.LENGTH_LONG).show();
                                     break;
                                 case Barcode.EMAIL:
                                     //start intent to give a list of emailing apps
